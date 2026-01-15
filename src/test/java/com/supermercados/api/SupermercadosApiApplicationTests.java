@@ -1,4 +1,4 @@
-package com.supermercados.supermercados_api;
+package com.supermercados.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
