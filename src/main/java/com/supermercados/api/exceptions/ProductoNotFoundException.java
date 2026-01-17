@@ -1,4 +1,7 @@
 package com.supermercados.api.exceptions;
 
-public class ProductoNotFoundException {
+public class ProductoNotFoundException extends RuntimeException {
+    public ProductoNotFoundException(Long id) {
+        super("Producto no encontrado con ID: " + id);
+    }
 }
