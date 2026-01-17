@@ -2,6 +2,7 @@ package com.supermercados.api.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Venta {
 
     @Id
@@ -29,7 +31,7 @@ public class Venta {
 
     private BigDecimal total;
 
-    private Boolean anulada = false;
+    private Boolean activa = false;
 
     // aqui estara la relacion de --> Una venta TIENE MUCHOS productos ( a traves de VentaProducto)
     @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
