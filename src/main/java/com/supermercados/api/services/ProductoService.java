@@ -1,7 +1,6 @@
 package com.supermercados.api.services;
 
-import com.supermercados.api.dtos.requests.ProductoRequestDTO;
-import com.supermercados.api.dtos.responses.ProductoResponseDTO;
+import com.supermercados.api.exceptions.ConflictException;
 import com.supermercados.api.exceptions.ProductoNotFoundException;
 import com.supermercados.api.models.Producto;
 import com.supermercados.api.repositories.ProductoRepository;
@@ -11,49 +10,50 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class ProductoService {
-    private final ProductoRepository productoRepository;
 
-    public List<ProductoResponseDTO> listar() {
-        return productoRepository.findAll().stream().map(this::toResponse).toList();
+    private final ProductoRepository repository;
+
+    public ProductoService(ProductoRepository repository) {
+        this.repository = repository;
     }
 
-    public ProductoResponseDTO crear(ProductoRequestDTO dto) {
-        Producto p = Producto.builder()
-                .nombre(dto.getNombre())
-                .precio(dto.getPrecio())
-                .categoria(dto.getCategoria())
-                .stock(dto.getStock())
-                .activo(true)
-                .build();
-        return toResponse(productoRepository.save(p));
+    public List<Producto> listar() {
+        return repository.findAll();
     }
 
-    public ProductoResponseDTO actualizar(Long id, ProductoRequestDTO dto) {
-        Producto p = productoRepository.findById(id).orElseThrow(() -> new ProductoNotFoundException(id));
-        p.setNombre(dto.getNombre());
-        p.setPrecio(dto.getPrecio());
-        p.setCategoria(dto.getCategoria());
-        p.setStock(dto.getStock());
-        p.setActivo(true);
-        return toResponse(productoRepository.save(p));
+    public Producto obtenerPorId(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ProductoNotFoundException("Producto no encontrado"));
+    }
+
+    public Producto crear(Long id, Producto p) {
+        if (repository.existsByNombreIgnoreCase(p.getNombre())) {
+            throw new ConflictException("El producto ya exite (nombre repetido)");
+        }
+        return repository.save(p);
+    }
+
+    public Producto actualizar(Long id, Producto nuevo) {
+        Producto existente = obtenerPorId(id);
+
+        // Añadir despues regla de duplicados pero que excluya el propio ID
+        if (!existente.getNombre().equalsIgnoreCase(nuevo.getNombre())
+                && repository.existsByNombreIgnoreCase(nuevo.getNombre())) {
+            throw new ConflictException("Nombre ya usado por otro producto");
+        }
+
+        existente.setNombre(nuevo.getNombre());
+        existente.setPrecio(nuevo.getPrecio());
+        existente.setCategoria(nuevo.getCategoria());
+        existente.setStock(nuevo.getStock());
+        existente.setActivo(nuevo.getActivo());
+
+        return repository.save(existente);
     }
 
     public void eliminar(Long id) {
-        if (!productoRepository.existsById(id)) throw new ProductoNotFoundException(id);
-        productoRepository.deleteById(id);
+        Producto p = obtenerPorId(id);
+        repository.delete(p);
     }
-
-    private ProductoResponseDTO toResponse(Producto p) {
-        return ProductoResponseDTO.builder()
-                .id(p.getId())
-                .nombre(p.getNombre())
-                .categoria(p.getCategoria())
-                .stock(p.getStock())
-                .activo(p.getActivo())
-                .build();
-    }
-
-
 }
