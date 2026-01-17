@@ -1,57 +1,57 @@
 package com.supermercados.api.services;
 
-import com.supermercados.api.dtos.requests.SucursalRequestDTO;
-import com.supermercados.api.dtos.responses.SucursalResponseDTO;
-import com.supermercados.api.exceptions.ProductoNotFoundException;
+import com.supermercados.api.exceptions.ConflictException;
 import com.supermercados.api.exceptions.SucursalNotFoundException;
+import com.supermercados.api.models.Producto;
 import com.supermercados.api.models.Sucursal;
 import com.supermercados.api.repositories.SucursalRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Service
-@RequiredArgsConstructor
 public class SucursalService {
-    private final SucursalRepository sucursalRepository;
 
-    public List<SucursalResponseDTO> listar() {
-        return sucursalRepository.findAll().stream().map(this::toResponse).toList();
+    private final SucursalRepository repository;
+
+    public SucursalService(SucursalRepository repository) {
+        this.repository = repository;
     }
 
-    public SucursalResponseDTO crear(SucursalRequestDTO dto) {
-        Sucursal s = Sucursal.builder()
-                .nombre(dto.getNombre())
-                .direccion(dto.getDireccion())
-                .activa(true)
-                .build();
-        return toResponse(sucursalRepository.save(s));
+    public List<Sucursal> listar() {
+        return repository.findAll();
     }
 
-    public SucursalResponseDTO actualizar(Long id, SucursalRequestDTO dto) {
-        Sucursal s = sucursalRepository.findById(id).orElseThrow(() -> new SucursalNotFoundException(id));
-        s.setNombre(dto.getNombre());
-        s.setDireccion(dto.getDireccion());
-        s.setActiva(true);
-        return toResponse(sucursalRepository.save(s));
+    public Sucursal obtenerPorId(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new SucursalNotFoundException("Sucursal no encontrada"));
+    }
+
+    public Sucursal crear(Sucursal s) {
+        if (repository.existsByNombreIgnoreCase(s.getNombre())) {
+            throw new ConflictException("La sucursal ya existe (Nombre repetido)");
+        }
+        return repository.save(s);
+    }
+
+    public Sucursal actualizar(Long id, Sucursal nuevo) {
+        Sucursal existente = obtenerPorId(id);
+
+        // Añadir despues regla de duplicados pero que excluya el propio ID
+        if (!existente.getNombre().equalsIgnoreCase(nuevo.getNombre())
+                && repository.existsByNombreIgnoreCase(nuevo.getNombre())) {
+            throw new ConflictException("Nombre ya utilizado por otra sucursal");
+        }
+
+        existente.setNombre(nuevo.getNombre());
+        existente.setDireccion(nuevo.getDireccion());
+
+        return repository.save(existente);
     }
 
     public void eliminar(Long id) {
-        if (!sucursalRepository.existsById(id)) throw new SucursalNotFoundException(id);
-        sucursalRepository.deleteById(id);
-    }
-
-    public Sucursal getEntity(Long id) {
-        return sucursalRepository.findById(id).orElseThrow(() -> new SucursalNotFoundException(id));
-    }
-
-    private SucursalResponseDTO toResponse(Sucursal s) {
-        return SucursalResponseDTO.builder()
-                .id(s.getId())
-                .nombre(s.getNombre())
-                .direccion(s.getDireccion())
-                .activa(s.getActiva())
-                .build();
+        Sucursal s = obtenerPorId(id);
+        repository.delete(s);
     }
 }
