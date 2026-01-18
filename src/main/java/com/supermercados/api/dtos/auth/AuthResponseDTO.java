@@ -1,4 +1,4 @@
-package com.supermercados.api.dtos.responses;
+package com.supermercados.api.dtos.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

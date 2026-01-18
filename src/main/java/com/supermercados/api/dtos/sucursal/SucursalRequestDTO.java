@@ -1,4 +1,4 @@
-package com.supermercados.api.dtos.requests;
+package com.supermercados.api.dtos.sucursal;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

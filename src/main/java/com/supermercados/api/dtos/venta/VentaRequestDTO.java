@@ -1,4 +1,4 @@
-package com.supermercados.api.dtos.requests;
+package com.supermercados.api.dtos.venta;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -13,15 +13,7 @@ public class VentaRequestDTO {
     private Long sucursalId;
 
     @NotEmpty(message = "Debe incluir al menos un producto")
-    private List<VentaProductoDTO> productos;
-
-    // aqui creo una clase interna para cada producto en la venta
-    @Data
-    public static class VentaProductoDTO {
-        private Long productoId;
-
-        private Integer cantidad;
-    }
+    private List<VentaDetalleRequestDTO> detalle;
 }
 
 

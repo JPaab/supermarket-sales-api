@@ -7,15 +7,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "ventas")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Venta {
 
     @Id
@@ -23,26 +22,31 @@ public class Venta {
     private Long id;
 
     //aqui estara la relacion de --> Cada venta es de UNA sucursal
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sucursal_id", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "sucursal_id")
     private Sucursal sucursal;
 
-    private LocalDateTime fechaVenta;
+    @Column(nullable = false)
+    private LocalDate fecha;
 
+    @Column(nullable = false)
     private BigDecimal total;
 
-    private Boolean activa = false;
+    @Column(nullable = false)
+    private boolean anulada = false;
+
+    private LocalDateTime anuladaEn;
 
     // aqui estara la relacion de --> Una venta TIENE MUCHOS productos ( a traves de VentaProducto)
     @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<VentaProducto> productos;
+    private List<VentaDetalle> detalle = new ArrayList<>();
 
     // aqui en el @PrePersist lo que hace es que se ejecuta automaticamente antes de que lo guardes en la BD
     // Si no se especifica la fecha manualmente, pone la fecha y hora actual
     @PrePersist
     public void prePersist() {
-        if (fechaVenta == null) {
-            fechaVenta = LocalDateTime.now();
+        if (fecha == null) {
+            fecha = LocalDate.now();
         }
     }
 }
