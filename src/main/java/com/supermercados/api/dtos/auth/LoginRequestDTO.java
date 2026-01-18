@@ -1,4 +1,4 @@
-package com.supermercados.api.dtos.requests;
+package com.supermercados.api.dtos.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
