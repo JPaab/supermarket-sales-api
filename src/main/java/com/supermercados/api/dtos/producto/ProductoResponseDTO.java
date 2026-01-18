@@ -1,20 +1,18 @@
-package com.supermercados.api.dtos.responses;
+package com.supermercados.api.dtos.producto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
-@Builder
 public class ProductoResponseDTO {
-
     private Long id;
     private String nombre;
     private BigDecimal precio;
     private String categoria;
     private Integer stock;
-    private Boolean activo;
 }

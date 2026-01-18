@@ -4,7 +4,6 @@ import com.supermercados.api.exceptions.ConflictException;
 import com.supermercados.api.exceptions.ProductoNotFoundException;
 import com.supermercados.api.models.Producto;
 import com.supermercados.api.repositories.ProductoRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

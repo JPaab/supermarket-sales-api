@@ -1,6 +1,6 @@
 package com.supermercados.api.repositories;
 
-import com.supermercados.api.models.VentaProducto;
+import com.supermercados.api.models.VentaDetalle;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface VentaProductoRepository extends JpaRepository<VentaProducto, Long> {
+public interface VentaProductoRepository extends JpaRepository<VentaDetalle, Long> {
 
     // aqui - Buscar todos los productos de una venta
-    List<VentaProducto> findByVentaId(Long ventaId);
+    List<VentaDetalle> findByVentaId(Long ventaId);
 
     //aqui - Buscar todas las ventas donde aparece un producto
-    List<VentaProducto> findByProductoId(Long productoId);
+    List<VentaDetalle> findByProductoId(Long productoId);
 
     // aqui - Agrupar por producto y sumar cantidades (para el producto mas vendido)
     @Query("SELECT vp.producto.id, SUM(vp.cantidad) " +
