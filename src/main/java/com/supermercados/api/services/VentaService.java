@@ -10,7 +10,9 @@ import com.supermercados.api.models.Venta;
 import com.supermercados.api.models.VentaDetalle;
 import com.supermercados.api.repositories.VentaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal; /// (para calcular total)
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,8 +31,12 @@ public class VentaService {
     }
 
     // POST /api/ventas
+    @Transactional
+    // (recomendado porque  hace que registrar/anular sea consistente (si falla algo, no deja stock modificado a medias)
     public Venta registrar(VentaRequestDTO dto) {
         if (dto == null) throw new BadRequestException("Datos incorrectos");
+        if (dto.getDetalle() == null || dto.getDetalle().isEmpty())
+            throw new BadRequestException("La venta debe tener al menos un producto");
 
         Sucursal sucursal = sucursalService.obtenerPorId(dto.getSucursalId());
 
@@ -39,24 +45,38 @@ public class VentaService {
         venta.setFecha(LocalDate.now());
         venta.setAnulada(false);
 
-        // Creamos detalles (TODO meter el control del stock)
+        BigDecimal total = BigDecimal.ZERO;
 
+        // Creamos detalles (TODO meter el control del stock)
         for (VentaDetalleRequestDTO item : dto.getDetalle()) {
             Producto p = productoService.obtenerPorId(item.getProductoId());
+
+            // control de stock (mínimo)
+            if (item.getCantidad() == null || item.getCantidad() <= 0)
+                throw new BadRequestException("La cantidad debe ser mayor a 0");
+            if (p.getStock() == null) p.setStock(0);
+            if (p.getStock() < item.getCantidad())
+                throw new BadRequestException("Stock insuficiente para el producto: " + p.getNombre());
+            p.setStock(p.getStock() - item.getCantidad());
 
             VentaDetalle vp = new VentaDetalle();
             vp.setVenta(venta);
             vp.setProducto(p);
             vp.setCantidad(item.getCantidad());
+            vp.setPrecioUnitario(p.getPrecio());
+            venta.getDetalle().add(vp);
+            total = total.add(p.getPrecio().multiply(BigDecimal.valueOf(item.getCantidad())));
         }
+
+        venta.setTotal(total);
 
         return ventaRepository.save(venta);
     }
 
     // GET /api/ventas?sucursalId=&fecha=
-    public List<Venta> buscar (Long sucursalId, LocalDate fecha) {
+    public List<Venta> buscar(Long sucursalId, LocalDate fecha) {
         if (sucursalId != null && fecha != null)
-            return ventaRepository.findBySucursalIdAndFechaVenta(sucursalId, fecha);
+            return ventaRepository.findBySucursalIdAndFecha(sucursalId, fecha);
         if (sucursalId != null)
             return ventaRepository.findBySucursalId(sucursalId);
         if (fecha != null)
@@ -70,10 +90,21 @@ public class VentaService {
     }
 
     // DELETE LOGICO /api/ventas/{id}
+    @Transactional
     public Venta anular(Long id) {
         Venta v = obtenerPorId(id);
         if (v.isAnulada())
             return v;
+
+        // devolver stock (mínimo)
+        if (v.getDetalle() != null) {
+            for (VentaDetalle d : v.getDetalle()) {
+                if (d == null || d.getProducto() == null || d.getCantidad() == null) continue;
+                Producto p = d.getProducto();
+                if (p.getStock() == null) p.setStock(0);
+                p.setStock(p.getStock() + d.getCantidad());
+            }
+        }
 
         v.setAnulada(true);
         v.setAnuladaEn(LocalDateTime.now());

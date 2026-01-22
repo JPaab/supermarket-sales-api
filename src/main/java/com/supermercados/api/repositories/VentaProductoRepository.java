@@ -19,15 +19,15 @@ public interface VentaProductoRepository extends JpaRepository<VentaDetalle, Lon
 
     // aqui - Agrupar por producto y sumar cantidades (para el producto mas vendido)
     @Query("SELECT vp.producto.id, SUM(vp.cantidad) " +
-            "FROM VentaProducto vp " +
-            "WHERE vp.venta.anulada = false" +
+            "FROM VentaDetalle vp " + /// JPQL usa el nombre de la entidad (VentaDetalle), no el nombre de tabla
+            "WHERE vp.venta.anulada = false " + /// espacio al final para que no quede falseGROUP
             "GROUP BY vp.producto.id " +
             "ORDER BY SUM(vp.cantidad) DESC")
     List<Object[]> findProductosMasVendidos();
 
-    //aqui - Sumar cantidad vendida de un producto en especifico
-    @Query("SELECT COALESCE(SUM(vp.cantidad), 0)" +
-            "FROM VentaProducto vp " +
+    // aqui - Sumar cantidad vendida de un producto en especifico
+    @Query("SELECT COALESCE(SUM(vp.cantidad), 0) " + /// espacio al final por consistencia
+            "FROM VentaDetalle vp " + /// JPQL usa el nombre de la entidad
             "WHERE vp.producto.id = :productoId AND vp.venta.anulada = false")
     Integer sumCantidadByProductoId(@Param("productoId") Long productoId);
 }

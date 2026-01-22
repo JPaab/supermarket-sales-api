@@ -2,7 +2,6 @@ package com.supermercados.api.services;
 
 import com.supermercados.api.exceptions.ConflictException;
 import com.supermercados.api.exceptions.SucursalNotFoundException;
-import com.supermercados.api.models.Producto;
 import com.supermercados.api.models.Sucursal;
 import com.supermercados.api.repositories.SucursalRepository;
 import org.springframework.stereotype.Service;
@@ -20,13 +19,20 @@ public class SucursalService {
     }
 
     public List<Sucursal> listar() {
-        return repository.findAll();
+        return repository.findByActivaTrue();
     }
 
     public Sucursal obtenerPorId(Long id) {
-        return repository.findById(id)
+        Sucursal s = repository.findById(id)
                 .orElseThrow(() -> new SucursalNotFoundException("Sucursal no encontrada"));
+
+        if (s.getActiva() != null && !s.getActiva()) { /// no devolver sucursal inactiva como si existiera
+            throw new SucursalNotFoundException("Sucursal no encontrada");
+        }
+
+        return s;
     }
+
 
     public Sucursal crear(Sucursal s) {
         if (repository.existsByNombreIgnoreCase(s.getNombre())) {
@@ -52,6 +58,7 @@ public class SucursalService {
 
     public void eliminar(Long id) {
         Sucursal s = obtenerPorId(id);
-        repository.delete(s);
+        s.setActiva(false);
+        repository.save(s);
     }
 }
