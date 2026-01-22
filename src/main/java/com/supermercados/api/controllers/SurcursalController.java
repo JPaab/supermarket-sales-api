@@ -1,5 +1,8 @@
 package com.supermercados.api.controllers;
 
+import com.supermercados.api.dtos.sucursal.SucursalMapper;
+import com.supermercados.api.dtos.sucursal.SucursalResponseDTO;
+import com.supermercados.api.models.ApiResponse;
 import com.supermercados.api.models.Producto;
 import com.supermercados.api.models.Sucursal;
 import com.supermercados.api.services.SucursalService;
@@ -27,28 +30,36 @@ public class SurcursalController {
 
     //Permite crear una sucursal con los parametros establecidos
     @PostMapping
-    public ResponseEntity<Sucursal> crear(@Valid @RequestBody Producto producto){
-        Sucursal sucursalCreado = sucursalService.crear(null);
-        return ResponseEntity.status(HttpStatus.CREATED).body(sucursalCreado);
+    public ResponseEntity<ApiResponse<SucursalResponseDTO>> crear(@Valid @RequestBody Producto producto){
+        Sucursal sucursalCreada = sucursalService.crear(null);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true,"Nueva sucursal creada", SucursalMapper.toDTO(sucursalCreada)));
     }
 
     //Permite buscar la sucursal por ID
     @PostMapping("{/id}")
-    public ResponseEntity<Sucursal> obtenerPorId(@PathVariable Long id){
-        return ResponseEntity.status(HttpStatus.OK).body(sucursalService.obtenerPorId(id));
+    public ResponseEntity<ApiResponse<SucursalResponseDTO>> obtenerPorId(@PathVariable Long id){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(true,"Sucursal por ID", SucursalMapper.toDTO(sucursalService.obtenerPorId(id))));
     }
 
     //Actualiza la sucursal
     @PutMapping("{/id}")
-    public ResponseEntity<Sucursal> actualizar(@PathVariable Long id, @Valid @RequestBody Sucursal sucursal){
-        return ResponseEntity.status(HttpStatus.OK).body(sucursalService.actualizar(id, sucursal));
+    public ResponseEntity<ApiResponse<SucursalResponseDTO>> actualizar(@PathVariable Long id, @Valid @RequestBody Sucursal sucursal){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(true,"Sucursal actualizada correctamente", SucursalMapper.toDTO(sucursalService.actualizar(id, sucursal))));
     }
 
     //Elimina una sucursal
     @DeleteMapping
-    public ResponseEntity<Sucursal> eliminar(@PathVariable Long id){
+    public ResponseEntity<ApiResponse<SucursalResponseDTO>> eliminar(@PathVariable Long id){
         sucursalService.eliminar(id);
-        return ResponseEntity.status(HttpStatus.OK).body(sucursalService.obtenerPorId(id));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(true,"Sucursal eliminada correctamente", SucursalMapper.toDTO(sucursalService.obtenerPorId(id))));
     }
 
 }

@@ -1,6 +1,12 @@
 package com.supermercados.api.controllers;
 
+import com.supermercados.api.dtos.producto.ProductoMapper;
+import com.supermercados.api.dtos.producto.ProductoRequestDTO;
+import com.supermercados.api.dtos.producto.ProductoResponseDTO;
+import com.supermercados.api.models.ApiResponse;
 import com.supermercados.api.models.Producto;
+import com.supermercados.api.models.Sucursal;
+import com.supermercados.api.models.Venta;
 import com.supermercados.api.services.ProductoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,33 +28,30 @@ public class ProductoController {
     public ResponseEntity<List<Producto>> listar(){
         return ResponseEntity.ok(productoService.listar());
     }
-/*
+
     //Permite crear un producto con los parametros establecidos
     @PostMapping
-    public ResponseEntity<Producto> crear(@Valid @RequestBody Producto producto){
-        Producto productoCreado = productoService.crear(null, producto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(productoCreado);
+    public ResponseEntity<ApiResponse<ProductoResponseDTO>> crear(@Valid @RequestBody Producto producto){
+        Producto productoCreado = productoService.crear(producto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true,"Producto creado correctamente", ProductoMapper.toDTO(productoCreado)));
     }
 
- */
-
-    //Permite obtener el producto por ID
-    @PostMapping("{/id}")
-    public ResponseEntity<Producto> obtenerPorId(@PathVariable Long id){
-        return ResponseEntity.status(HttpStatus.OK).body(productoService.obtenerPorId(id));
-    }
 
     //Actualiza el producto
     @PutMapping("{/id}")
-    public ResponseEntity<Producto> actualizar(@PathVariable Long id, @Valid @RequestBody Producto producto){
-        return ResponseEntity.status(HttpStatus.OK).body(productoService.actualizar(id, producto));
+    public ResponseEntity<ApiResponse<ProductoResponseDTO>> actualizar(@PathVariable Long id, @Valid @RequestBody ProductoRequestDTO producto){
+        Producto productoActualizar = productoService.actualizar(id, ProductoMapper.toModel(producto));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(true,"Producto actualizado correctamente", ProductoMapper.toDTO(productoActualizar)));
     }
 
     //Elimina un producto
-    @DeleteMapping
-    public ResponseEntity<Producto> eliminar(@PathVariable Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> eliminar(@PathVariable Long id){
         productoService.eliminar(id);
-        return ResponseEntity.status(HttpStatus.OK).body(productoService.obtenerPorId(id));
+        return ResponseEntity.ok(new ApiResponse<>(true,"Producto eliminado correctamente", null));
     }
-
 }
