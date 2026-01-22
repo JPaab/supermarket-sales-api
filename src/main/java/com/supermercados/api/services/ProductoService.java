@@ -1,5 +1,6 @@
 package com.supermercados.api.services;
 
+import com.supermercados.api.exceptions.BadRequestException;
 import com.supermercados.api.exceptions.ConflictException;
 import com.supermercados.api.exceptions.ProductoNotFoundException;
 import com.supermercados.api.models.Producto;
@@ -26,33 +27,61 @@ public class ProductoService {
                 .orElseThrow(() -> new ProductoNotFoundException("Producto no encontrado"));
     }
 
-    public Producto crear(Long id, Producto p) {
+    public Producto crear(Producto p) {
         if (repository.existsByNombreIgnoreCase(p.getNombre())) {
-            throw new ConflictException("El producto ya exite (nombre repetido)");
+            throw new ConflictException("El producto ya existe (nombre repetido)");
         }
+        if (p.getStock() == null) p.setStock(0);
         return repository.save(p);
     }
 
     public Producto actualizar(Long id, Producto nuevo) {
         Producto existente = obtenerPorId(id);
 
-        // Añadir despues regla de duplicados pero que excluya el propio ID
         if (!existente.getNombre().equalsIgnoreCase(nuevo.getNombre())
                 && repository.existsByNombreIgnoreCase(nuevo.getNombre())) {
-            throw new ConflictException("Nombre ya usado por otro producto");
+            throw new ConflictException("nombre ya utilizado por otro producto");
         }
 
         existente.setNombre(nuevo.getNombre());
         existente.setPrecio(nuevo.getPrecio());
         existente.setCategoria(nuevo.getCategoria());
-        existente.setStock(nuevo.getStock());
-        existente.setActivo(nuevo.getActivo());
+        existente.setStock(nuevo.getStock() == null ? 0 : nuevo.getStock());
 
         return repository.save(existente);
     }
 
     public void eliminar(Long id) {
         Producto p = obtenerPorId(id);
-        repository.delete(p);
+        p.setActivo(false);
+        repository.save(p);
+    }
+
+    // =========================
+    // INVENTARIO (extra)
+    // =========================
+
+    public Producto descontarStock(Long productoId, int cantidad) {
+        if (cantidad <= 0) throw new BadRequestException("cantidad invalida");
+
+        Producto p = obtenerPorId(productoId);
+        if (p.getStock() == null) p.setStock(0);
+
+        if (p.getStock() < cantidad) {
+            throw new BadRequestException("Stock insuficiente para el producto: " + p.getNombre());
+        }
+
+        p.setStock(p.getStock() - cantidad);
+        return repository.save(p);
+    }
+
+    public Producto reponerStock(Long productoId, int cantidad) {
+        if (cantidad <= 0) throw new BadRequestException("cantidad invalida");
+
+        Producto p = obtenerPorId(productoId);
+        if (p.getStock() == null) p.setStock(0);
+
+        p.setStock(p.getStock() + cantidad);
+        return repository.save(p);
     }
 }
