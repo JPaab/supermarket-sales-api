@@ -3,23 +3,22 @@ package com.supermercados.api.services;
 import com.supermercados.api.exceptions.ProductoNotFoundException;
 import com.supermercados.api.models.Producto;
 import com.supermercados.api.repositories.ProductoRepository;
-import com.supermercados.api.repositories.VentaProductoRepository;
+import com.supermercados.api.repositories.VentaDetalleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class EstadisticasService {
-    private final VentaProductoRepository ventaProductoRepository;
+    private final VentaDetalleRepository ventaDetalleRepository;
     private final ProductoRepository productoRepository;
 
 
     public Producto productoMasVendido() {
 
-        List<Object[]> resultado = ventaProductoRepository.findProductosMasVendidos();
+        List<Object[]> resultado = ventaDetalleRepository.findProductosMasVendidos();
 
         if (resultado.isEmpty()) {
             throw new RuntimeException("No existen ventas registradas");
