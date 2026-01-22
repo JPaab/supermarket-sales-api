@@ -22,8 +22,8 @@ public class Venta {
     private Long id;
 
     //aqui estara la relacion de --> Cada venta es de UNA sucursal
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "sucursal_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "sucursal_id", nullable = false)
     private Sucursal sucursal;
 
     @Column(nullable = false)

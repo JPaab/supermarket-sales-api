@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "usuarios")
 @Data
@@ -26,4 +28,12 @@ public class Usuario {
     private String rol = "USER";
 
     private Boolean activo = true;
+
+    /// aqui - Fecha de creacion (se hace autosave al crear)
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    /// aqui - Ultimo login (se hace update cada vez que hace login)
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
 }

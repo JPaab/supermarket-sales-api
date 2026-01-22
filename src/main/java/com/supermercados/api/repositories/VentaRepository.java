@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface VentaRepository extends JpaRepository<Venta,Long> {
     List<Venta> findByFecha(LocalDate fecha);
 
     // aqui - Buscar ventas por sucursal y fecha
-    List<Venta> findBySucursalIdAndFechaVenta(Long sucursalId,
+    List<Venta> findBySucursalIdAndFecha(Long sucursalId,
                                                      LocalDate fecha);
 
 
@@ -34,5 +35,6 @@ public interface VentaRepository extends JpaRepository<Venta,Long> {
 
     // aqui - La suma de los totales por sucursal
     @Query("SELECT COALESCE(SUM(v.total), 0) FROM Venta v WHERE v.sucursal.id = :sucursalId AND v.anulada = false")
-    Double sumTotalBySucursalIdAndAnuladaFalse(@Param("sucursalId") Long sucursalId);
+    BigDecimal sumTotalBySucursalIdAndAnuladaFalse(@Param("sucursalId") Long sucursalId); /// aqui otro cambio sumTotalBySucursalIdAndAnuladaFalse ahora devuelve BigDecimal
+    ///(para que sea coherente  con Venta.total)
 }

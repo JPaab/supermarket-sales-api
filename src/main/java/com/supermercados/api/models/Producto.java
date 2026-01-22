@@ -35,6 +35,6 @@ public class Producto {
 
     // aqui estaria la relacion de --> Un producto apareece en MUCHAS ventas (a traves de VentaProducto)
     @OneToMany(mappedBy = "producto")
-    private List<VentaDetalle> ventaProducto;
+    private List<VentaDetalle> ventaDetalles;
 
 }

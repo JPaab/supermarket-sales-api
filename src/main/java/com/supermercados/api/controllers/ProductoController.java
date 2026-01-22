@@ -1,8 +1,5 @@
 package com.supermercados.api.controllers;
 
-import com.supermercados.api.dtos.requests.ProductoRequestDTO;
-import com.supermercados.api.dtos.responses.ProductoResponseDTO;
-import com.supermercados.api.models.ApiResponse;
 import com.supermercados.api.models.Producto;
 import com.supermercados.api.services.ProductoService;
 import jakarta.validation.Valid;
@@ -25,13 +22,15 @@ public class ProductoController {
     public ResponseEntity<List<Producto>> listar(){
         return ResponseEntity.ok(productoService.listar());
     }
-
+/*
     //Permite crear un producto con los parametros establecidos
     @PostMapping
     public ResponseEntity<Producto> crear(@Valid @RequestBody Producto producto){
         Producto productoCreado = productoService.crear(null, producto);
         return ResponseEntity.status(HttpStatus.CREATED).body(productoCreado);
     }
+
+ */
 
     //Permite obtener el producto por ID
     @PostMapping("{/id}")
