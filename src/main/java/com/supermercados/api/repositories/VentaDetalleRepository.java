@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface VentaProductoRepository extends JpaRepository<VentaDetalle, Long> {
+public interface VentaDetalleRepository extends JpaRepository<VentaDetalle, Long> {
 
     // aqui - Buscar todos los productos de una venta
     List<VentaDetalle> findByVentaId(Long ventaId);

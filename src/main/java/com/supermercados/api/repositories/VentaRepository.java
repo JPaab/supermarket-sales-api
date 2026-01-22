@@ -22,12 +22,15 @@ public interface VentaRepository extends JpaRepository<Venta,Long> {
     List<Venta> findBySucursalIdAndFecha(Long sucursalId,
                                                      LocalDate fecha);
 
+    List<Venta> findByFechaAndAnuladaFalse(LocalDate fecha);
+
+    List<Venta> findBySucursalIdAndFechaAndAnuladaFalse(Long sucursalId, LocalDate fecha);
 
     // aqui - Buscar ventas por fecha (sin que importa la sucursal)
     List<Venta> findByAnuladaFalse();
 
     // aqui - Buscar ventas por sucursal no anuladas
-    List<Venta> findBySucursalIdandAnuladaFalse(Long sucursalId);
+    List<Venta> findBySucursalIdAndAnuladaFalse(Long sucursalId);
 
     // aqui - Contar ventas por sucursal
     @Query("SELECT COUNT(v) FROM Venta v WHERE v.sucursal.id = :sucursalId AND v.anulada = false")
