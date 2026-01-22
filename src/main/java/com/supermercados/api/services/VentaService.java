@@ -49,15 +49,13 @@ public class VentaService {
 
         // Creamos detalles (TODO meter el control del stock)
         for (VentaDetalleRequestDTO item : dto.getDetalle()) {
-            Producto p = productoService.obtenerPorId(item.getProductoId());
+
+            Producto p = productoService.obtenerActivoPorId(item.getProductoId());
 
             // control de stock (mínimo)
             if (item.getCantidad() == null || item.getCantidad() <= 0)
                 throw new BadRequestException("La cantidad debe ser mayor a 0");
-            if (p.getStock() == null) p.setStock(0);
-            if (p.getStock() < item.getCantidad())
-                throw new BadRequestException("Stock insuficiente para el producto: " + p.getNombre());
-            p.setStock(p.getStock() - item.getCantidad());
+            productoService.descontarStock(p.getId(), item.getCantidad());
 
             VentaDetalle vp = new VentaDetalle();
             vp.setVenta(venta);
@@ -76,12 +74,12 @@ public class VentaService {
     // GET /api/ventas?sucursalId=&fecha=
     public List<Venta> buscar(Long sucursalId, LocalDate fecha) {
         if (sucursalId != null && fecha != null)
-            return ventaRepository.findBySucursalIdAndFecha(sucursalId, fecha);
+            return ventaRepository.findBySucursalIdAndFechaAndAnuladaFalse(sucursalId, fecha);
         if (sucursalId != null)
-            return ventaRepository.findBySucursalId(sucursalId);
+            return ventaRepository.findBySucursalIdAndAnuladaFalse(sucursalId);
         if (fecha != null)
-            return ventaRepository.findByFecha(fecha);
-        return ventaRepository.findAll();
+            return ventaRepository.findByFechaAndAnuladaFalse(fecha);
+        return ventaRepository.findByAnuladaFalse();
     }
 
     public Venta obtenerPorId(Long id) {
@@ -102,7 +100,7 @@ public class VentaService {
                 if (d == null || d.getProducto() == null || d.getCantidad() == null) continue;
                 Producto p = d.getProducto();
                 if (p.getStock() == null) p.setStock(0);
-                p.setStock(p.getStock() + d.getCantidad());
+                productoService.reponerStock(d.getProducto().getId(), d.getCantidad());
             }
         }
 

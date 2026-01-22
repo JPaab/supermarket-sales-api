@@ -19,12 +19,20 @@ public class ProductoService {
     }
 
     public List<Producto> listar() {
-        return repository.findAll();
+        return repository.findByActivoTrue();
     }
 
     public Producto obtenerPorId(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ProductoNotFoundException("Producto no encontrado"));
+    }
+
+    public Producto obtenerActivoPorId(Long id) {
+        Producto p = obtenerPorId(id);
+        if (p.getActivo() != null && !p.getActivo()) {
+            throw new ProductoNotFoundException("Producto no encontrado");
+        }
+        return p;
     }
 
     public Producto crear(Producto p) {
@@ -64,7 +72,7 @@ public class ProductoService {
     public Producto descontarStock(Long productoId, int cantidad) {
         if (cantidad <= 0) throw new BadRequestException("cantidad invalida");
 
-        Producto p = obtenerPorId(productoId);
+        Producto p = obtenerActivoPorId(productoId);
         if (p.getStock() == null) p.setStock(0);
 
         if (p.getStock() < cantidad) {
@@ -79,6 +87,9 @@ public class ProductoService {
         if (cantidad <= 0) throw new BadRequestException("cantidad invalida");
 
         Producto p = obtenerPorId(productoId);
+        if (p.getActivo() != null && !p.getActivo()) {
+            throw new BadRequestException("No se puede reponer stock a un producto inactivo: " + p.getNombre());
+        }
         if (p.getStock() == null) p.setStock(0);
 
         p.setStock(p.getStock() + cantidad);

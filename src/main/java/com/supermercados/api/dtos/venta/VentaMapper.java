@@ -27,14 +27,16 @@ public class VentaMapper {
     }
 
     private static VentaDetalleResponseDTO toDetalleDTO(VentaDetalle d) {
-        BigDecimal subtotal = d.getProducto().getPrecio()
-                .multiply(BigDecimal.valueOf(d.getCantidad()));
-
+        BigDecimal precioUnitario = d.getPrecioUnitario();
+        BigDecimal subtotal = d.getSubtotal();
+        if (subtotal == null && precioUnitario != null && d.getCantidad() != null) {
+            subtotal = precioUnitario.multiply(BigDecimal.valueOf(d.getCantidad()));
+        }
         return new VentaDetalleResponseDTO(
                 d.getProducto().getId(),
                 d.getProducto().getNombre(),
                 d.getCantidad(),
-                d.getProducto().getPrecio(),
+                precioUnitario,
                 subtotal
         );
     }
