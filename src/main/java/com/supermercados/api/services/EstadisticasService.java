@@ -4,9 +4,11 @@ import com.supermercados.api.exceptions.ProductoNotFoundException;
 import com.supermercados.api.models.Producto;
 import com.supermercados.api.repositories.ProductoRepository;
 import com.supermercados.api.repositories.VentaDetalleRepository;
+import com.supermercados.api.repositories.VentaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -29,6 +31,13 @@ public class EstadisticasService {
         return productoRepository.findById(productoId)
                 .orElseThrow(() ->
                         new ProductoNotFoundException("Producto no encontrado con id " + productoId));
+    }
+
+    private final VentaRepository ventaRepository;
+
+    public BigDecimal ingresosTotales(Long sucursalId) {
+        if (sucursalId == null) return ventaRepository.sumTotalAndAnuladaFalse();
+        return ventaRepository.sumTotalBySucursalIdAndAnuladaFalse(sucursalId);
     }
 
 }
