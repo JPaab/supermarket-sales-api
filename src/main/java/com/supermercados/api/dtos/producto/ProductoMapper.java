@@ -22,4 +22,15 @@ public class ProductoMapper {
                 p.getStock()
         );
     }
+
+    public static ProductoAdminResponseDTO toAdminDTO(Producto p) {
+        return new ProductoAdminResponseDTO(
+                p.getId(),
+                p.getNombre(),
+                p.getPrecio(),
+                p.getCategoria(),
+                p.getStock(),
+                p.getActivo()
+        );
+    }
 }

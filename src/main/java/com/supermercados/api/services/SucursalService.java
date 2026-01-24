@@ -61,4 +61,24 @@ public class SucursalService {
         s.setActiva(false);
         repository.save(s);
     }
+
+    public Sucursal obtenerPorIdIncluyendoInactivas(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new SucursalNotFoundException("Sucursal no encontrada"));
+    }
+
+    public Sucursal reactivar(Long id) {
+        Sucursal s = obtenerPorIdIncluyendoInactivas(id);
+
+        if (s.getActiva() != null && s.getActiva()) {
+            throw new ConflictException("La sucursal ya está activa");
+        }
+
+        s.setActiva(true);
+        return repository.save(s);
+    }
+
+    public List<Sucursal> listarTodas(){
+        return repository.findAll();
+    }
 }

@@ -65,6 +65,17 @@ public class ProductoService {
         repository.save(p);
     }
 
+    //Reactivar producto
+    public Producto reactivar(Long id) {
+        Producto p = obtenerPorId(id); // NO uses obtenerActivoPorId, porque si está inactivo “desaparece”
+        if (p.getActivo() != null && p.getActivo()) {
+            throw new ConflictException("El producto ya está activo");
+        }
+        p.setActivo(true);
+        return repository.save(p);
+    }
+
+
     // =========================
     // INVENTARIO (extra)
     // =========================
@@ -95,4 +106,9 @@ public class ProductoService {
         p.setStock(p.getStock() + cantidad);
         return repository.save(p);
     }
+
+    public List<Producto> listarTodos(){
+        return repository.findAll();
+    }
+
 }
