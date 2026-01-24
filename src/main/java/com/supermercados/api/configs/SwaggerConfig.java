@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-    /// aqui - Configuracion principal de OpenAPI/Swagger
+    // aqui - Configuracion principal de OpenAPI/Swagger
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()

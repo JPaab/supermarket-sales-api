@@ -26,11 +26,15 @@ public class AdminController {
         this.usuarioRepository = usuarioRepository;
     }
 
-    /// aqui - Promover a usuario a ADMIN
+    // aqui - Promover a usuario a ADMIN
     @PutMapping("/users/{username}/promote")
     public ResponseEntity<ApiResponse<Void>> promoteToAdmin(@PathVariable String username) {
         Usuario usuario = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+        if (!usuario.getActivo()) {
+            throw new BadRequestException("No se puede cambiar el rol de un usuario desactivado. Reactívalo primero.");
+        }
 
         if ("ADMIN".equals(usuario.getRol())) {
             throw new BadRequestException("El usuario ya es ADMIN");
@@ -42,7 +46,7 @@ public class AdminController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuario promovido a ADMIN", null));
     }
 
-    /// aqui - Degradar a USER
+    // aqui - Degradar a USER
     @PutMapping("/users/{username}/demote")
     public ResponseEntity<ApiResponse<Void>> demoteToUser(
             @PathVariable String username,
@@ -55,6 +59,10 @@ public class AdminController {
         Usuario usuario = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
+        if (!usuario.getActivo()) {
+            throw new BadRequestException("No se puede cambiar el rol de un usuario desactivado. Reactívalo primero.");
+        }
+
         if (!"ADMIN".equals(usuario.getRol())) {
             throw new BadRequestException("El usuario no es ADMIN");
         }
@@ -65,8 +73,8 @@ public class AdminController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuario degradado a USER", null));
     }
 
-    /// aqui - Desactivar usuario (no puede hacer login)
-    @PutMapping("/users/{username}/deactivate")
+    // aqui - Desactivar usuario (no puede hacer login)
+    @PutMapping("/users/{username}/desactivate")
     public ResponseEntity<ApiResponse<Void>> deactivateUser(
             @PathVariable String username,
             Authentication auth) {
@@ -88,7 +96,7 @@ public class AdminController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuario desactivado", null));
     }
 
-    /// aqui - Reactivar usuario (puede hacer login de nuevo)
+    // aqui - Reactivar usuario (puede hacer login de nuevo)
     @PutMapping("/users/{username}/reactivate")
     public ResponseEntity<ApiResponse<Void>> reactivateUser(@PathVariable String username) {
         Usuario usuario = usuarioRepository.findByUsername(username)
@@ -104,7 +112,7 @@ public class AdminController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Usuario reactivado", null));
     }
 
-    /// aqui - Ver detalles completos de un usuario
+    // aqui - Ver detalles completos de un usuario
     @GetMapping("/users/{username}")
     public ResponseEntity<ApiResponse<UserDetailDTO>> getUserDetails(@PathVariable String username) {
         Usuario usuario = usuarioRepository.findByUsername(username)
@@ -122,7 +130,7 @@ public class AdminController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Detalles del usuario", details));
     }
 
-    /// aqui - Listar todos los usuarios
+    // aqui - Listar todos los usuarios
     @GetMapping("/users")
     public ResponseEntity<ApiResponse<List<UserRoleDTO>>> listUsers() {
         List<Usuario> usuarios = usuarioRepository.findAll();
@@ -133,10 +141,10 @@ public class AdminController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Lista de usuarios", userRoles));
     }
 
-    /// aqui - DTO para lista de usuarios
+    // aqui - DTO para lista de usuarios
     public record UserRoleDTO(Long id, String username, String rol, Boolean activo) {}
 
-    /// aqui - DTO para detalles completos
+    // aqui - DTO para detalles completos
     public record UserDetailDTO(
             Long id,
             String username,
