@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface VentaRepository extends JpaRepository<Venta,Long> {
+public interface VentaRepository extends JpaRepository<Venta, Long> {
 
     // aqui - Buscar ventas por sucursal
     List<Venta> findBySucursalId(Long sucursalId);
@@ -20,7 +20,7 @@ public interface VentaRepository extends JpaRepository<Venta,Long> {
 
     // aqui - Buscar ventas por sucursal y fecha
     List<Venta> findBySucursalIdAndFecha(Long sucursalId,
-                                                     LocalDate fecha);
+                                         LocalDate fecha);
 
     List<Venta> findByFechaAndAnuladaFalse(LocalDate fecha);
 
@@ -40,4 +40,7 @@ public interface VentaRepository extends JpaRepository<Venta,Long> {
     @Query("SELECT COALESCE(SUM(v.total), 0) FROM Venta v WHERE v.sucursal.id = :sucursalId AND v.anulada = false")
     BigDecimal sumTotalBySucursalIdAndAnuladaFalse(@Param("sucursalId") Long sucursalId); /// aqui otro cambio sumTotalBySucursalIdAndAnuladaFalse ahora devuelve BigDecimal
     ///(para que sea coherente  con Venta.total)
+
+    @Query("SELECT COALESCE(SUM(v.total), 0) FROM Venta v WHERE v.anulada = false")
+    BigDecimal sumTotalAndAnuladaFalse();
 }

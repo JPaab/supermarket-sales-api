@@ -1,7 +1,9 @@
 package com.supermercados.api.services;
 
 import com.supermercados.api.dtos.venta.VentaDetalleRequestDTO;
+import com.supermercados.api.dtos.venta.VentaMapper;
 import com.supermercados.api.dtos.venta.VentaRequestDTO;
+import com.supermercados.api.dtos.venta.VentaResponseDTO;
 import com.supermercados.api.exceptions.BadRequestException;
 import com.supermercados.api.exceptions.VentaNotFoundException;
 import com.supermercados.api.models.Producto;
@@ -55,6 +57,7 @@ public class VentaService {
             // control de stock (mínimo)
             if (item.getCantidad() == null || item.getCantidad() <= 0)
                 throw new BadRequestException("La cantidad debe ser mayor a 0");
+
             productoService.descontarStock(p.getId(), item.getCantidad());
 
             VentaDetalle vp = new VentaDetalle();
@@ -71,6 +74,11 @@ public class VentaService {
         return ventaRepository.save(venta);
     }
 
+    @Transactional
+    public VentaResponseDTO registrarDTO(VentaRequestDTO dto) {
+        return VentaMapper.toDTO(registrar(dto));
+    }
+
     // GET /api/ventas?sucursalId=&fecha=
     public List<Venta> buscar(Long sucursalId, LocalDate fecha) {
         if (sucursalId != null && fecha != null)
@@ -81,6 +89,14 @@ public class VentaService {
             return ventaRepository.findByFechaAndAnuladaFalse(fecha);
         return ventaRepository.findByAnuladaFalse();
     }
+
+    @Transactional(readOnly = true)
+    public List<VentaResponseDTO> buscarDTO(Long sucursalId, LocalDate fecha) {
+        return buscar(sucursalId, fecha).stream()
+                .map(VentaMapper::toDTO)
+                .toList();
+    }
+
 
     public Venta obtenerPorId(Long id) {
         return ventaRepository.findById(id)
@@ -107,5 +123,10 @@ public class VentaService {
         v.setAnulada(true);
         v.setAnuladaEn(LocalDateTime.now());
         return ventaRepository.save(v);
+    }
+
+    @Transactional
+    public VentaResponseDTO anularDTO(Long id) {
+        return VentaMapper.toDTO(anular(id));
     }
 }

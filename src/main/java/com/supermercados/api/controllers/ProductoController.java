@@ -5,8 +5,6 @@ import com.supermercados.api.dtos.producto.ProductoRequestDTO;
 import com.supermercados.api.dtos.producto.ProductoResponseDTO;
 import com.supermercados.api.models.ApiResponse;
 import com.supermercados.api.models.Producto;
-import com.supermercados.api.models.Sucursal;
-import com.supermercados.api.models.Venta;
 import com.supermercados.api.services.ProductoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +23,21 @@ public class ProductoController {
 
     //Muestra los productos existentes
     @GetMapping
-    public ResponseEntity<List<Producto>> listar(){
-        return ResponseEntity.ok(productoService.listar());
+    public ResponseEntity<ApiResponse<List<ProductoResponseDTO>>> listar() {
+        List<ProductoResponseDTO> productos = productoService.listar()
+                .stream()
+                .map(ProductoMapper::toDTO)
+                .toList();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(true, "Lista de productos", productos));
     }
 
     //Permite crear un producto con los parametros establecidos
     @PostMapping
-    public ResponseEntity<ApiResponse<ProductoResponseDTO>> crear(@Valid @RequestBody Producto producto){
-        Producto productoCreado = productoService.crear(producto);
+    public ResponseEntity<ApiResponse<ProductoResponseDTO>> crear(@Valid @RequestBody ProductoRequestDTO dto){
+        Producto productoCreado = productoService.crear(ProductoMapper.toModel(dto));
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(true,"Producto creado correctamente", ProductoMapper.toDTO(productoCreado)));
@@ -40,9 +45,9 @@ public class ProductoController {
 
 
     //Actualiza el producto
-    @PutMapping("{/id}")
-    public ResponseEntity<ApiResponse<ProductoResponseDTO>> actualizar(@PathVariable Long id, @Valid @RequestBody ProductoRequestDTO producto){
-        Producto productoActualizar = productoService.actualizar(id, ProductoMapper.toModel(producto));
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductoResponseDTO>> actualizar(@PathVariable Long id, @Valid @RequestBody ProductoRequestDTO dto){
+        Producto productoActualizar = productoService.actualizar(id, ProductoMapper.toModel(dto));
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ApiResponse<>(true,"Producto actualizado correctamente", ProductoMapper.toDTO(productoActualizar)));
