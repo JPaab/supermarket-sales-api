@@ -2,7 +2,6 @@ package com.supermercados.api.configs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.supermercados.api.models.ApiResponse;
-import com.supermercados.api.util.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -20,18 +19,16 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    /// aqui - Filtro JWT
+    // aqui - Filtro JWT
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    /// aqui - ObjectMapper para JSON
+    // aqui - ObjectMapper para JSON
     private final ObjectMapper objectMapper;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, ObjectMapper objectMapper) {
@@ -39,19 +36,19 @@ public class SecurityConfig {
         this.objectMapper = objectMapper;
     }
 
-    /// aqui - AuthenticationManager para autenticar usuarios
+    // aqui - AuthenticationManager para autenticar usuarios
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
-    /// aqui - PasswordEncoder para encriptar passwords
+    // aqui - PasswordEncoder para encriptar passwords
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    /// aqui - Configuracion de seguridad principal
+    // aqui - Configuracion de seguridad principal
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -71,7 +68,7 @@ public class SecurityConfig {
                 .build();
     }
 
-    /// aqui - Manejador de 401: no autenticado o token invalido
+    // aqui - Manejador de 401: no autenticado o token invalido
     private AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, ex) -> {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -82,7 +79,7 @@ public class SecurityConfig {
         };
     }
 
-    /// aqui - Manejador de 403: no tienes permisos
+    // aqui - Manejador de 403: no tienes permisos
     private AccessDeniedHandler accessDeniedHandler() {
         return (request, response, ex) -> {
             response.setStatus(HttpStatus.FORBIDDEN.value());

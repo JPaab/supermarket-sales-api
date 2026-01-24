@@ -1,11 +1,8 @@
 package com.supermercados.api.controllers;
 
-
-import com.supermercados.api.dtos.venta.VentaMapper;
 import com.supermercados.api.dtos.venta.VentaRequestDTO;
 import com.supermercados.api.dtos.venta.VentaResponseDTO;
 import com.supermercados.api.models.ApiResponse;
-import com.supermercados.api.models.Venta;
 import com.supermercados.api.services.VentaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +10,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
 
