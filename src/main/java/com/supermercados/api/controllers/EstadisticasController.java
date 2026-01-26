@@ -4,15 +4,14 @@ package com.supermercados.api.controllers;
 import com.supermercados.api.dtos.producto.ProductoResponseDTO;
 import com.supermercados.api.models.ApiResponse;
 import com.supermercados.api.models.Producto;
+import com.supermercados.api.models.Sucursal;
 import com.supermercados.api.services.EstadisticasService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/estadisticas")
@@ -46,5 +45,35 @@ public class EstadisticasController {
 
         return ResponseEntity.ok(new ApiResponse<>(true, msg, total));
     }
+
+    //TOP 5
+    @GetMapping("/productos/top-5")
+    public ResponseEntity<List<ProductoResponseDTO>> top5ProductosMasVendidos() {
+        return ResponseEntity.ok(
+                estadisticaService.top5ProductosMasVendidos()
+        );
+    }
+//POR PRODUCTO
+@GetMapping("/productos/{productoId}")
+public ResponseEntity<ApiResponse<ProductoEstadisticaDTO>> estadisticasProducto(
+        @PathVariable Long productoId) {
+    return ResponseEntity.ok(
+            new ApiResponse<>(true, "Estadísticas del producto",
+                    estadisticaService.estadisticasProducto(productoId))
+    );
+}
+
+
+    //POR SUCURSAL
+
+    @GetMapping("/sucursales/{sucursalId}")
+    public ResponseEntity<ApiResponse<SucursalEstadisticaDTO>> estadisticasSucursal(
+            @PathVariable Long sucursalId) {
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, "Estadísticas de la sucursal",
+                        estadisticaService.estadisticasSucursal(sucursalId))
+        );
+    }
+
 
 }

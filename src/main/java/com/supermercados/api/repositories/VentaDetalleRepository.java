@@ -7,6 +7,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+
 
 @Repository
 public interface VentaDetalleRepository extends JpaRepository<VentaDetalle, Long> {
@@ -24,6 +27,7 @@ public interface VentaDetalleRepository extends JpaRepository<VentaDetalle, Long
             "GROUP BY vp.producto.id " +
             "ORDER BY SUM(vp.cantidad) DESC")
     List<Object[]> findProductosMasVendidos();
+    List<Object[]> findProductosMasVendidos(Pageable pageable);
 
     // aqui - Sumar cantidad vendida de un producto en especifico
     @Query("SELECT COALESCE(SUM(vp.cantidad), 0) " + /// espacio al final por consistencia
