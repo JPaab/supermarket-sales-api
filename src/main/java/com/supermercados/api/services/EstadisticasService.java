@@ -1,5 +1,6 @@
 package com.supermercados.api.services;
 
+import com.supermercados.api.exceptions.NotFoundException;
 import com.supermercados.api.exceptions.ProductoNotFoundException;
 import com.supermercados.api.models.Producto;
 import com.supermercados.api.repositories.ProductoRepository;
@@ -23,7 +24,7 @@ public class EstadisticasService {
         List<Object[]> resultado = ventaDetalleRepository.findProductosMasVendidos();
 
         if (resultado.isEmpty()) {
-            throw new RuntimeException("No existen ventas registradas");
+            throw new NotFoundException("No existen ventas registradas");
         }
 
         Long productoId = (Long) resultado.get(0)[0];
