@@ -63,7 +63,7 @@ public class ProductoController {
     }
 
     //Reestock de un producto (solo para admin)
-    @PatchMapping("/{id}/stock")
+    @PatchMapping("/admin/{id}/stock")
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
 
@@ -73,7 +73,7 @@ public class ProductoController {
     }
 
     //Listado de productos tanto activos como inactivos (solo para admin)
-    @GetMapping("/todos-los-productos")
+    @GetMapping("/admin/todos-los-productos")
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
 
@@ -86,7 +86,7 @@ public class ProductoController {
     }
 
     //Reactiva un producto eliminado
-    @PatchMapping("/{id}/reactivar")
+    @PatchMapping("/admin/{id}/reactivar")
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<ApiResponse<ProductoResponseDTO>> reactivarProducto(@PathVariable Long id) {
