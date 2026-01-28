@@ -19,7 +19,7 @@ public class SwaggerConfig {
                         .title("Supermercados API")
                         .description("API de gestion de supermercados con autenticación JWT")
                         .version("1.0.0")
-                        .termsOfService("Derechos reservados - Grupo A HAB Bootcamp 2026")
+                        .termsOfService("Derechos reservados - Grupo A, HAB Bootcamp 2026")
                 )
                 .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
                 .components(new Components()
