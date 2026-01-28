@@ -4,10 +4,12 @@ import com.supermercados.api.dtos.producto.ProductoEstadisticaDTO;
 import com.supermercados.api.dtos.producto.ProductoMapper;
 import com.supermercados.api.dtos.producto.ProductoResponseDTO;
 import com.supermercados.api.dtos.sucursal.SucursalEstadisticaDTO;
+import com.supermercados.api.dtos.sucursal.SucursalMapper;
 import com.supermercados.api.exceptions.ProductoNotFoundException;
 import com.supermercados.api.models.Producto;
 import com.supermercados.api.models.Sucursal;
 import com.supermercados.api.repositories.ProductoRepository;
+import com.supermercados.api.repositories.SucursalRepository;
 import com.supermercados.api.repositories.VentaDetalleRepository;
 import com.supermercados.api.repositories.VentaRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.util.List;
 public class EstadisticasService {
     private final VentaDetalleRepository ventaDetalleRepository;
     private final ProductoRepository productoRepository;
+    private final SucursalRepository sucursalRepository;
 
 
     public Producto productoMasVendido() {

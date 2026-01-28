@@ -34,4 +34,17 @@ public interface VentaDetalleRepository extends JpaRepository<VentaDetalle, Long
             "FROM VentaDetalle vp " + /// JPQL usa el nombre de la entidad
             "WHERE vp.producto.id = :productoId AND vp.venta.anulada = false")
     Integer sumCantidadByProductoId(@Param("productoId") Long productoId);
+
+    //Estadisticas por producto
+
+    @Query("""
+        SELECT 
+            COALESCE(SUM(vp.cantidad), 0),
+            COALESCE(SUM(vp.subtotal), 0)
+        FROM VentaDetalle vp
+        WHERE vp.producto.id = :productoId
+        AND vp.venta.anulada = false
+    """)
+    Object[] estadisticasProducto(@Param("productoId") Long productoId);
+
 }
