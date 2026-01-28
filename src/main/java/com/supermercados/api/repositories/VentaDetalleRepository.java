@@ -27,6 +27,12 @@ public interface VentaDetalleRepository extends JpaRepository<VentaDetalle, Long
             "GROUP BY vp.producto.id " +
             "ORDER BY SUM(vp.cantidad) DESC")
     List<Object[]> findProductosMasVendidos();
+
+    @Query("SELECT vp.producto.id, SUM(vp.cantidad) " +
+            "FROM VentaDetalle vp " +
+            "WHERE vp.venta.anulada = false " +
+            "GROUP BY vp.producto.id " +
+            "ORDER BY SUM(vp.cantidad) DESC")
     List<Object[]> findProductosMasVendidos(Pageable pageable);
 
     // aqui - Sumar cantidad vendida de un producto en especifico
