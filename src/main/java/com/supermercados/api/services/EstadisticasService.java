@@ -8,6 +8,7 @@ import com.supermercados.api.dtos.sucursal.SucursalEstadisticaDTO;
 import com.supermercados.api.dtos.sucursal.SucursalMapper;
 import com.supermercados.api.exceptions.NotFoundException;
 import com.supermercados.api.exceptions.ProductoNotFoundException;
+import com.supermercados.api.exceptions.SucursalNotFoundException;
 import com.supermercados.api.models.Producto;
 import com.supermercados.api.models.Sucursal;
 import com.supermercados.api.repositories.ProductoRepository;
@@ -58,7 +59,7 @@ public class EstadisticasService {
                 ventaDetalleRepository.findProductosMasVendidos(PageRequest.of(0, 5));
 
         if (resultados.isEmpty()) {
-            throw new RuntimeException("No existen ventas registradas");
+            throw new NotFoundException("No existen ventas registradas");
         }
 
         return resultados.stream()
@@ -80,7 +81,8 @@ public ProductoEstadisticaDTO estadisticasProducto(Long productoId) {
 
     Object[] result = ventaDetalleRepository.estadisticasProducto(productoId);
 
-    Integer cantidadVendida = (Integer) result[0];
+    Number n = (Number) result[0];
+    Integer cantidadVendida = n.intValue();
     BigDecimal ingresosGenerados = (BigDecimal) result[1];
 
     return new ProductoEstadisticaDTO(
@@ -97,7 +99,7 @@ public ProductoEstadisticaDTO estadisticasProducto(Long productoId) {
 
         Sucursal sucursal = sucursalRepository.findById(sucursalId)
                 .orElseThrow(() ->
-                        new RuntimeException(
+                        new SucursalNotFoundException(
                                 "Sucursal no encontrada con id " + sucursalId));
 
         Object[] result = ventaRepository.estadisticasSucursal(sucursalId);

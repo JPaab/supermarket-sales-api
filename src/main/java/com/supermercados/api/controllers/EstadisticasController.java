@@ -1,7 +1,9 @@
 package com.supermercados.api.controllers;
 
 
+import com.supermercados.api.dtos.producto.ProductoEstadisticaDTO;
 import com.supermercados.api.dtos.producto.ProductoResponseDTO;
+import com.supermercados.api.dtos.sucursal.SucursalEstadisticaDTO;
 import com.supermercados.api.models.ApiResponse;
 import com.supermercados.api.models.Producto;
 import com.supermercados.api.models.Sucursal;
