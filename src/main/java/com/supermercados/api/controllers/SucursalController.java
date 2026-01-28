@@ -76,7 +76,7 @@ public class SucursalController {
     }
 
     //Reactivar sucursal (solo para admin)
-    @PatchMapping("/{id}/reactivar")
+    @PatchMapping("/admin/{id}/reactivar")
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
 
@@ -86,7 +86,7 @@ public class SucursalController {
     }
 
     //Listar sucursales tanto activas como inactivas (solo admin)
-    @GetMapping("/todas-las-sucursales")
+    @GetMapping("/admin/todas-las-sucursales")
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
 
