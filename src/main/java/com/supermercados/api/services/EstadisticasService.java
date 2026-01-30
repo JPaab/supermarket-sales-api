@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class EstadisticasService {
     private final VentaDetalleRepository ventaDetalleRepository;
     private final ProductoRepository productoRepository;
     private final SucursalRepository sucursalRepository;
-
+    private final VentaRepository ventaRepository;
 
     public Producto productoMasVendido() {
 
@@ -46,7 +47,6 @@ public class EstadisticasService {
                         new ProductoNotFoundException("Producto no encontrado con id " + productoId));
     }
 
-    private final VentaRepository ventaRepository;
 
     public BigDecimal ingresosTotales(Long sucursalId) {
         if (sucursalId == null) return ventaRepository.sumTotalAndAnuladaFalse();
@@ -65,10 +65,8 @@ public class EstadisticasService {
 
         return resultados.stream()
                 .map(r -> (Long) r[0]) // productoId
-                .map(id -> productoRepository.findById(id)
-                        .orElseThrow(() ->
-                                new ProductoNotFoundException(
-                                        "Producto no encontrado con id " + id)))
+                .map(id -> productoRepository.findById(id).orElse(null))
+                .filter(Objects::nonNull)
                 .map(ProductoMapper::toDTO)
                 .toList();
     }
