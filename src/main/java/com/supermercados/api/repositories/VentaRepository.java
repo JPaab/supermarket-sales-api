@@ -47,11 +47,9 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
     BigDecimal sumTotalAndAnuladaFalse();
 
 //para sacar estadisticas sucursal
-    @Query("""
-            SELECT COUNT(v.id), COALESCE(SUM(v.total),0)
-            FROM Venta v
-            WHERE v.sucursal.id = :sucursalId AND v.anulada = false
-            """)
-    Object[] estadisticasSucursal(@Param("sucursalId") Long sucursalId);
+    @Query("SELECT COUNT(v.id), COALESCE(SUM(v.total),0)" +
+            "FROM Venta v " +
+            "WHERE v.sucursal.id = :sucursalId AND v.anulada = false")
+    List<Object[]> estadisticasSucursal(@Param("sucursalId") Long sucursalId);
 
 }
