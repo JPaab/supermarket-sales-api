@@ -43,14 +43,9 @@ public interface VentaDetalleRepository extends JpaRepository<VentaDetalle, Long
 
     //Estadisticas por producto
 
-    @Query("""
-        SELECT 
-            COALESCE(SUM(vp.cantidad), 0),
-            COALESCE(SUM(vp.subtotal), 0)
-        FROM VentaDetalle vp
-        WHERE vp.producto.id = :productoId
-        AND vp.venta.anulada = false
-    """)
-    Object[] estadisticasProducto(@Param("productoId") Long productoId);
+    @Query("SELECT COALESCE(SUM(vd.cantidad), 0), COALESCE(SUM(vd.subtotal), 0) " +
+            "FROM VentaDetalle vd " +
+            "WHERE vd.producto.id = :productoId AND vd.venta.anulada = false")
+    List<Object[]> estadisticasProducto(@Param("productoId") Long productoId);
 
 }

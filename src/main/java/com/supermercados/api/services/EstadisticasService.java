@@ -9,6 +9,7 @@ import com.supermercados.api.dtos.sucursal.SucursalMapper;
 import com.supermercados.api.exceptions.NotFoundException;
 import com.supermercados.api.exceptions.ProductoNotFoundException;
 import com.supermercados.api.exceptions.SucursalNotFoundException;
+import com.supermercados.api.exceptions.VentaNotFoundException;
 import com.supermercados.api.models.Producto;
 import com.supermercados.api.models.Sucursal;
 import com.supermercados.api.repositories.ProductoRepository;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class EstadisticasService {
     private final VentaDetalleRepository ventaDetalleRepository;
     private final ProductoRepository productoRepository;
     private final SucursalRepository sucursalRepository;
-
+    private final VentaRepository ventaRepository;
 
     public Producto productoMasVendido() {
 
@@ -45,14 +47,13 @@ public class EstadisticasService {
                         new ProductoNotFoundException("Producto no encontrado con id " + productoId));
     }
 
-    private final VentaRepository ventaRepository;
 
     public BigDecimal ingresosTotales(Long sucursalId) {
         if (sucursalId == null) return ventaRepository.sumTotalAndAnuladaFalse();
         return ventaRepository.sumTotalBySucursalIdAndAnuladaFalse(sucursalId);
     }
 
-//top 5
+    //top 5
     public List<ProductoResponseDTO> top5ProductosMasVendidos() {
 
         List<Object[]> resultados =
@@ -64,34 +65,41 @@ public class EstadisticasService {
 
         return resultados.stream()
                 .map(r -> (Long) r[0]) // productoId
-                .map(id -> productoRepository.findById(id)
-                        .orElseThrow(() ->
-                                new ProductoNotFoundException(
-                                        "Producto no encontrado con id " + id)))
+                .map(id -> productoRepository.findById(id).orElse(null))
+                .filter(Objects::nonNull)
                 .map(ProductoMapper::toDTO)
                 .toList();
     }
-//por producto
-public ProductoEstadisticaDTO estadisticasProducto(Long productoId) {
 
-    Producto producto = productoRepository.findById(productoId)
-            .orElseThrow(() ->
-                    new ProductoNotFoundException(
-                            "Producto no encontrado con id " + productoId));
+    //por producto
+    public ProductoEstadisticaDTO estadisticasProducto(Long productoId) {
 
-    Object[] result = ventaDetalleRepository.estadisticasProducto(productoId);
+        Producto producto = productoRepository.findById(productoId)
+                .orElseThrow(() ->
+                        new ProductoNotFoundException(
+                                "Producto no encontrado con id " + productoId));
 
-    Number n = (Number) result[0];
-    Integer cantidadVendida = n.intValue();
-    BigDecimal ingresosGenerados = (BigDecimal) result[1];
+        List<Object[]> resultados = ventaDetalleRepository.estadisticasProducto(productoId);
 
-    return new ProductoEstadisticaDTO(
-            producto.getId(),
-            producto.getNombre(),
-            cantidadVendida,
-            ingresosGenerados
-    );
-}
+        if (resultados.isEmpty()) {
+            throw new VentaNotFoundException("No hay ventas para este producto");
+        }
+
+        Object[] result = resultados.get(0);
+
+        Number cantidad = (Number) result[0];
+        Number ingresos = (Number) result[1];
+
+        Integer cantidadVendida = cantidad != null ? cantidad.intValue() : 0;
+        BigDecimal ingresosGenerados = ingresos != null ? new BigDecimal(ingresos.toString()) : BigDecimal.ZERO;
+
+        return new ProductoEstadisticaDTO(
+                producto.getId(),
+                producto.getNombre(),
+                cantidadVendida,
+                ingresosGenerados
+        );
+    }
 
 //por sucursal
 
@@ -102,10 +110,23 @@ public ProductoEstadisticaDTO estadisticasProducto(Long productoId) {
                         new SucursalNotFoundException(
                                 "Sucursal no encontrada con id " + sucursalId));
 
-        Object[] result = ventaRepository.estadisticasSucursal(sucursalId);
 
-        Long cantidadVentas = (Long) result[0];
-        BigDecimal ingresosTotales = (BigDecimal) result[1];
+        List<Object[]> resultados = ventaRepository.estadisticasSucursal(sucursalId);
+        if (resultados.isEmpty()) {
+            return new SucursalEstadisticaDTO(
+                    SucursalMapper.toDTO(sucursal),
+                    0L,
+                    BigDecimal.ZERO
+            );
+        }
+
+        Object[] result = resultados.get(0);
+
+        Number cantidadVentasNum = (Number) result[0];
+        Number ingresosNum = (Number) result[1];
+
+        Long cantidadVentas = cantidadVentasNum != null ? cantidadVentasNum.longValue() : 0L;
+        BigDecimal ingresosTotales = ingresosNum != null ? new BigDecimal(ingresosNum.toString()) : BigDecimal.ZERO;
 
         return new SucursalEstadisticaDTO(
                 SucursalMapper.toDTO(sucursal),
