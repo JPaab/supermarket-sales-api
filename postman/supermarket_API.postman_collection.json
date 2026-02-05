@@ -1,0 +1,488 @@
+{
+  "info": {
+    "_postman_id": "7886db77-c5e3-45b2-ab6b-c3f793b41ce6",
+    "name": "Supermercados API - Colección",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "50756015",
+    "_collection_link": "https://go.postman.co/collection/50756015-7886db77-c5e3-45b2-ab6b-c3f793b41ce6?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"user_testing\",\n  \"password\": \"test_stefano123\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Auth - Login (guarda token)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"user_testing\",\n  \"password\": \"test_stefano123\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Productos - Listar (GET público)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/productos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "productos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Productos - Crear (POST requiere token)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Arroz 1KG\",\n  \"precio\": 2.50,\n  \"categoria\": \"Alimentos\",\n  \"stock\": 50\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/productos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "productos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Productos - Obtener por ID (GET público)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/productos/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "productos",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Productos - Actualizar (PUT requiere token)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Arroz 1KG (Editado)\",\n  \"precio\": 2.75,\n  \"categoria\": \"Alimentos\",\n  \"stock\": 60\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/productos/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "productos",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Productos - Eliminar (DELETE requiere token)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/productos/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "productos",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Sucursales - Listar (GET público)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/sucursales",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "sucursales"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Sucursales - Crear (POST requiere token)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Sucursal Calle Real\",\n  \"direccion\": \"Calle Real 1D\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/sucursales",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "sucursales"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Sucursales - Actualizar (PUT requiere token)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Sucursal Calle Real (Editada)\",\n  \"direccion\": \"Calle Real 3D\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/sucursales/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "sucursales",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Sucursales - Eliminar (DELETE requiere token)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/sucursales/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "sucursales",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ventas - Registrar (POST requiere token)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sucursalId\": 1,\n  \"detalle\": [\n    { \"productoId\": 1, \"cantidad\": 15 }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/ventas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "ventas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ventas - Buscar (GET público)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/ventas?sucursalId=1&fecha=2026-02-05",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "ventas"
+          ],
+          "query": [
+            {
+              "key": "sucursalId",
+              "value": "1"
+            },
+            {
+              "key": "fecha",
+              "value": "2026-02-05"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ventas - Anular (DELETE requiere token)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/ventas/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "ventas",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Estadísticas - Producto más vendido (GET público)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/estadisticas/producto-mas-vendido",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "estadisticas",
+            "producto-mas-vendido"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Estadísticas - Ingresos totales (GET público)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/estadisticas/ingresos-totales",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "estadisticas",
+            "ingresos-totales"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin - Listar usuarios (requiere ADMIN)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/admin/users",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "admin",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}
