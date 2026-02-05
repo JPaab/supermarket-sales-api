@@ -1,13 +1,26 @@
-![Repo](https://img.shields.io/badge/GitHub-JPaab%2Fsupermarket--sales--api-black)
-![Stars](https://img.shields.io/github/stars/JPaab/supermarket-sales-api?style=flat)
-![Last Commit](https://img.shields.io/github/last-commit/JPaab/supermarket-sales-api?style=flat)
-
-![Swagger](https://img.shields.io/badge/Swagger-OpenAPI%203-green)
-![Java](https://img.shields.io/badge/Java-21-blue)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.1-brightgreen)
-![Database](https://img.shields.io/badge/Database-MySQL-orange)
+<div align="center">
 
 # 🛒 Supermercados API — Gestión de Ventas (Spring Boot)
+
+<!-- Badges -->
+<p>
+  <img alt="Java" src="https://img.shields.io/badge/Java-21-blue?style=for-the-badge" />
+  <img alt="Spring Boot" src="https://img.shields.io/badge/Spring%20Boot-4.0.1-brightgreen?style=for-the-badge" />
+  <img alt="Swagger" src="https://img.shields.io/badge/Swagger-OpenAPI%203-green?style=for-the-badge" />
+  <img alt="Database" src="https://img.shields.io/badge/Database-MySQL-orange?style=for-the-badge" />
+</p>
+
+<p>
+  <a href="https://github.com/JPaab/supermarket-sales-api">
+    <img alt="Stars" src="https://img.shields.io/github/stars/JPaab/supermarket-sales-api?style=for-the-badge" />
+  </a>
+  <a href="https://github.com/JPaab/supermarket-sales-api/commits/main">
+    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/JPaab/supermarket-sales-api?style=for-the-badge" />
+  </a>
+</p>
+</div>
+
+---
 **API REST** para gestionar ventas de una cadena de supermercados:
 
 - ✅ CRUD de **Productos** y **Sucursales**
@@ -52,7 +65,7 @@
 ## ✅ Requisitos
 - **Java 21**
 - **Maven**
-- **MySQL** corriendo (local o docker)
+- **MySQL** corriendo (Local o Docker)
 
 ### Lombok (imprescindible)
 1. IntelliJ: `Settings → Plugins` → instalar **Lombok**
@@ -124,8 +137,9 @@ mvn spring-boot:run
 
 ## 📄 Swagger (Documentación)
 
-`Swagger UI:`
-http://localhost:8080/swagger-ui/index.html
+Swagger UI:
+
+- `http://localhost:8080/swagger-ui/index.html`
 
 ---
 
@@ -285,7 +299,7 @@ Ejemplos:
 
 Incluye:
 
-- 1 test unitario
+- 1 test unitario.
 
 - 1 test de integración con rollback (@Transactional) para no modificar la DB.
 
@@ -295,13 +309,13 @@ Incluye:
 
 ### ❌ MySQL no conecta (Communications link failure)
 
-- MySQL apagado o puerto incorrecto
+- MySQL apagado o puerto incorrecto.
 
 `url/usuario/password mal configurados en application.properties`
 
 ### ❌ Lombok no funciona
 
-- Instalar plugin Lombok
+- Instalar plugin Lombok.
 
 `Activar annotation processing ✅`
 
