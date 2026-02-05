@@ -5,7 +5,6 @@ import com.supermercados.api.models.ApiResponse;
 import com.supermercados.api.models.Producto;
 import com.supermercados.api.services.ProductoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.annotation.Priority;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -35,6 +33,14 @@ public class ProductoController {
                 .status(HttpStatus.OK)
                 .body(new ApiResponse<>(true, "Lista de productos (activos)", productos));
     }
+
+    // Permite buscar producto por ID (solo si está activo)
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductoResponseDTO>> obtenerPorId(@PathVariable Long id) {
+        Producto p = productoService.obtenerActivoPorId(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Producto por ID", ProductoMapper.toDTO(p)));
+    }
+
 
     //Permite crear un producto con los parametros establecidos
     @PostMapping
