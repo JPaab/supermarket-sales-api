@@ -1,23 +1,35 @@
 <div align="center">
 
-# 🛒 Supermercados API — Gestión de Ventas (Spring Boot)
+# 🛒 Supermercados API — Gestión de Ventas
 
-<!-- Badges -->
 <p>
-  <img alt="Java" src="https://img.shields.io/badge/Java-21-blue?style=for-the-badge" />
-  <img alt="Spring Boot" src="https://img.shields.io/badge/Spring%20Boot-4.0.1-brightgreen?style=for-the-badge" />
-  <img alt="Swagger" src="https://img.shields.io/badge/Swagger-OpenAPI%203-green?style=for-the-badge" />
-  <img alt="Database" src="https://img.shields.io/badge/Database-MySQL-orange?style=for-the-badge" />
+  <a href="https://www.oracle.com/java/technologies/downloads/#java21" target="_blank" rel="noopener noreferrer" style="text-decoration:none; display:inline-block;">
+    <img alt="Java" src="https://img.shields.io/badge/Java-21-blue?style=for-the-badge" />
+  </a>
+
+  <a href="https://spring.io/projects/spring-boot" target="_blank" rel="noopener noreferrer" style="text-decoration:none; display:inline-block;">
+    <img alt="Spring Boot" src="https://img.shields.io/badge/Spring%20Boot-4.0.1-brightgreen?style=for-the-badge" />
+  </a>
+
+  <a href="https://swagger.io/tools/swagger-ui/" target="_blank" rel="noopener noreferrer" style="text-decoration:none; display:inline-block;">
+    <img alt="Swagger" src="https://img.shields.io/badge/Swagger-OpenAPI%203-green?style=for-the-badge" />
+  </a>
+
+  <a href="https://www.mysql.com/" target="_blank" rel="noopener noreferrer" style="text-decoration:none; display:inline-block;">
+    <img alt="Database" src="https://img.shields.io/badge/Database-MySQL-orange?style=for-the-badge" />
+  </a>
 </p>
 
 <p>
-  <a href="https://github.com/JPaab/supermarket-sales-api">
+  <a href="https://github.com/JPaab/supermarket-sales-api" style="text-decoration:none; display:inline-block;">
     <img alt="Stars" src="https://img.shields.io/github/stars/JPaab/supermarket-sales-api?style=for-the-badge" />
   </a>
-  <a href="https://github.com/JPaab/supermarket-sales-api/commits/main">
+
+  <a href="https://github.com/JPaab/supermarket-sales-api/commits/main" style="text-decoration:none; display:inline-block;">
     <img alt="Last Commit" src="https://img.shields.io/github/last-commit/JPaab/supermarket-sales-api?style=for-the-badge" />
   </a>
 </p>
+
 </div>
 
 ---
